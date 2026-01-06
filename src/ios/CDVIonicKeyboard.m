@@ -161,7 +161,7 @@ NSString* UITraitsClassString;
         [self setKeyboardHeight:height delay:duration+0.2];
         [self resetScrollView];
     }
-    
+
     [self setKeyboardStyle:self.keyboardStyle];
 
     NSString *js = [NSString stringWithFormat:@"Keyboard.fireOnShowing(%d);", (int)height];
@@ -216,15 +216,16 @@ NSString* UITraitsClassString;
 {
     CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
     int statusBarHeight = MIN(statusBarSize.width, statusBarSize.height);
-    
+
     int _paddingBottom = (int)self.paddingBottom;
-        
+
     if (statusBarHeight == 40) {
         _paddingBottom = _paddingBottom + 20;
     }
     NSLog(@"CDVIonicKeyboard: updating frame");
     // NOTE: to handle split screen correctly, the application's window bounds must be used as opposed to the screen's bounds.
-    CGRect f = [[[[UIApplication sharedApplication] delegate] window] bounds];
+    CGRect f = [self.webView.window bounds];
+    // CGRect f = [[[[UIApplication sharedApplication] delegate] window] bounds];
     CGRect wf = self.webView.frame;
     switch (self.keyboardResizes) {
         case ResizeBody:
@@ -261,12 +262,12 @@ NSString* UITraitsClassString;
     }) : imp_implementationWithBlock(^(id _s) {
         return UIKeyboardAppearanceLight;
     });
-    
+
     if (self.isWK) {
         for (NSString* classString in @[WKClassString, UITraitsClassString]) {
             Class c = NSClassFromString(classString);
             Method m = class_getInstanceMethod(c, @selector(keyboardAppearance));
-            
+
             if (m != NULL) {
                 method_setImplementation(m, newImp);
             } else {
@@ -278,7 +279,7 @@ NSString* UITraitsClassString;
         for (NSString* classString in @[UIClassString, UITraitsClassString]) {
             Class c = NSClassFromString(classString);
             Method m = class_getInstanceMethod(c, @selector(keyboardAppearance));
-            
+
             if (m != NULL) {
                 method_setImplementation(m, newImp);
             } else {
